@@ -33,8 +33,17 @@ For using this components you need api endpoint that response should exactly loo
 }
 ```
 
-> ### This below code is for Implementation
->
+> ### Props to Define
+```html
+<datatable
+  :endpoint="tableData.endpoint"
+  :columns="tableData.columns"
+  :actions="tableData.actions"
+  @deleteEvent="deleteEvent($event)"
+  :parameters="tableData.params"
+  :refresh="tableData.refresh"
+></datatable>
+```
 > Props
 > | props | Description | |
 > |------------|-----------------------------------------------------------------------------------------------------------------------------------------------|---|
@@ -43,6 +52,7 @@ For using this components you need api endpoint that response should exactly loo
 > | actions | This is also array of object. This is used for displaying delete and edit buttons | |
 > | parameters | This is parameters to pass and this is done automatically in emit event. You just have to pass it in props as null | |
 > | refresh | This is true and false toggle props to refresh datatable for reactivity | |
+> | eventName | Same name that is passed action[index].event. This has method this is defined in methods in vue instance which is for certain click event like delete on click | |
 
 ### the above defined props is defined in data
 
@@ -53,8 +63,8 @@ tableData: {
       endpoint: "http://localhost:3000/api/enquiry",
       columns: [
         {
-          field: "name", 
-          /* field from api response. this should be same as in 
+          field: "name",
+          /* field from api response. this should be same as in
           api response*/
           column: "name", //String to Display in datatable columns
           render: function(field) { //for rendering as per condition in datatable. Just like jquery render. This is optional
@@ -104,17 +114,6 @@ tableData: {
 ```
 
 #### After you have delete and edit buttons or your prefered actions buttons you can send axios request as mentioned below
-
-```html
-<datatable
-  :endpoint="tableData.endpoint"
-  :columns="tableData.columns"
-  :actions="tableData.actions"
-  @deleteEvent="deleteEvent($event)"
-  :parameters="tableData.params"
-  :refresh="tableData.refresh"
-></datatable>
-```
 
 ```js
   methods: {
