@@ -77,18 +77,18 @@ tableData: {
       actions: [
          /* This is for displaying buttons eg. delete/edit in datatable */
         {
-          event: "editEvent", /* name of event To emit when this button is clicked. This emitted event contains _id and params  */
-          class: "is-white has-text-primary px-2 py-0 mx-0 my-0", /* css class for button styling */
+          event: "editEvent",
+          /* name of event to emit when this button is clicked.
+          This emitted event contains _id and params(this is passed in parameters props when action button is clicked)  */
+          /* After That you can call @editEvent="methodName($event)" for your click action in buttons. See below for deleteEvent code
+          */
+          class: "is-white has-text-primary px-2 py-0 mx-0 my-0",
+          /* css class for button styling */
           value: `<span class="iconify" data-icon="ant-design:edit-filled" data-inline="false"></span>`
           /* For button content. */
         },
         {
-          event: "deleteEvent",
-          class: "is-white has-text-danger px-2 py-0 mx-0 my-0",
-          value: `<span class="iconify" data-icon="ant-design:delete-filled" data-inline="false"></span>`
-        },
-        {
-          event: "deleteEvent",
+          event: "deleteEvent", /* This event is implemented below */
           class: "is-white has-text-danger px-2 py-0 mx-0 my-0",
           value: `<span class="iconify" data-icon="ant-design:delete-filled" data-inline="false"></span>`
         }
@@ -109,7 +109,7 @@ tableData: {
   :refresh="tableData.refresh"
 ></datatable>
 ```
->> above ```deleteEvent``` is passed from action event , parameters is passed below ```this.tableData.params = events.params```
+
 ```js
   methods: {
     deleteEvent: function(event) {
@@ -123,9 +123,8 @@ tableData: {
         });
     }
   }
-
 ```
-
+## Full code Implementation
 ```html
 <template>
   <div>
