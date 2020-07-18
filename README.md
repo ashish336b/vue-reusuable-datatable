@@ -48,12 +48,14 @@ For using this components you need api endpoint that response should exactly loo
 
 ```js
 tableData: {
-      params: null,
-      refresh: true,
+      params: null, //always define this as null
+      refresh: true, //always define as either true or false
       endpoint: "http://localhost:3000/api/enquiry",
       columns: [
         {
-          field: "name", // field from api response. this should be same as in api response
+          field: "name", 
+          /* field from api response. this should be same as in 
+          api response*/
           column: "name", //String to Display in datatable columns
           render: function(field) { //for rendering as per condition in datatable. Just like jquery render. This is optional
             return !field ? "ok" : field;
@@ -77,7 +79,7 @@ tableData: {
       actions: [
          /* This is for displaying buttons eg. delete/edit in datatable */
         {
-          event: "editEvent",//<datatable @deleteEvent="methodToTrigger()">
+          event: "editEvent",//<datatable @editEvent="methodToTrigger()">
           /* name of event to emit when this button is clicked.
           This emitted event contains _id and params(this is passed in
           parameters props when action button is clicked)  */
