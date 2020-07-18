@@ -1,7 +1,5 @@
 # vue-serveside-datatable
 
-ServerSide resuable vue resuable components
-
 You can use this component by simply copy `datatable.vue` and add inside to your components folder in your project.
 
 For using this components you need api endpoint that response should exactly look like this.
