@@ -77,10 +77,12 @@ tableData: {
       actions: [
          /* This is for displaying buttons eg. delete/edit in datatable */
         {
-          event: "editEvent",
+          event: "editEvent",//<datatable @deleteEvent="methodToTrigger()">
           /* name of event to emit when this button is clicked.
-          This emitted event contains _id and params(this is passed in parameters props when action button is clicked)  */
-          /* After That you can call @editEvent="methodName($event)" for your click action in buttons. See below for deleteEvent code
+          This emitted event contains _id and params(this is passed in
+          parameters props when action button is clicked)  */
+          /* After That you can call @editEvent="methodName($event)"
+          for your click action in buttons. See below for deleteEvent code
           */
           class: "is-white has-text-primary px-2 py-0 mx-0 my-0",
           /* css class for button styling */
@@ -88,7 +90,9 @@ tableData: {
           /* For button content. */
         },
         {
-          event: "deleteEvent", /* This event is implemented below */
+          event: "deleteEvent", //<datatable @deleteEvent="methodToTrigger()">
+          /* This event is implemented below methodToTrigger
+          is named as deleteEvent */
           class: "is-white has-text-danger px-2 py-0 mx-0 my-0",
           value: `<span class="iconify" data-icon="ant-design:delete-filled" data-inline="false"></span>`
         }
@@ -124,7 +128,9 @@ tableData: {
     }
   }
 ```
+
 ## Full code Implementation
+
 ```html
 <template>
   <div>
