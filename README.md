@@ -8,14 +8,14 @@ You should use specific `GET` params in endpoint.
 http://localhost:3000/api/enquiry?limit=10&page=1&sortBy=name&order=asc&searchText=ashi
 ```
 
-| params     | Description                  |     |
-| ---------- | ---------------------------- | --- |
-| limit      | no of data to show in a page |     |
-| page       | Current page Number          |     |
-| sortBy     | database field name to sort  |     |
-| order      | asc or desc                  |     |
-| searchText | any search Text              |     |
-|            |                              |     |
+| params     | Description                  |     
+| ---------- | ---------------------------- |
+| limit      | no of data to show in a page |     
+| page       | Current page Number          |     
+| sortBy     | database field name to sort  |     
+| order      | asc or desc                  |     
+| searchText | any search Text              |     
+
 
 For using this components you need api endpoint like mentioned above and response should exactly look like this.
 
@@ -83,7 +83,9 @@ tableData: {
           /* field from api response. this should be same as in
           api response*/
           column: "name", //String to Display in datatable columns
-          render: function(field) { //for rendering as per condition in datatable. Just like jquery render. This is optional
+          render: function(field) { 
+            //for rendering as per condition in datatable. 
+            //Just like jquery render. This is optional
             return !field ? "ok" : field;
           }
         },
@@ -105,9 +107,10 @@ tableData: {
       actions: [
          /* This is for displaying buttons eg. delete/edit in datatable */
         {
-          event: "editEvent",//<datatable @editEvent="methodToTrigger()">
+          event: "editEvent",
+          //  <datatable @editEvent="methodToTriggerWhenClicked($event)">
           /* name of event to emit when this button is clicked.
-          This emitted event contains _id and params(this is passed in
+          This emitted $event contains _id and params(this is passed in
           parameters props when action button is clicked)  */
           /* After That you can call @editEvent="methodName($event)"
           for your click action in buttons. See below for deleteEvent code
