@@ -2,7 +2,22 @@
 
 You can use this component by simply copy `datatable.vue` and add inside to your components folder in your project.
 
-For using this components you need api endpoint that response should exactly look like this.
+You should use specific `GET` params in endpoint.
+
+```
+http://localhost:3000/api/endpoint?limit=10&page=1&sortBy=name&order=asc&searchText=ashi
+```
+
+| params     | Description                  |     |
+| ---------- | ---------------------------- | --- |
+| limit      | no of data to show in a page |     |
+| page       | Current page Number          |     |
+| sortBy     | database field name to sort  |     |
+| order      | asc or desc                  |     |
+| searchText | any search Text              |     |
+|            |                              |     |
+
+For using this components you need api endpoint like mentioned above and response should exactly look like this.
 
 ```json
 {
@@ -30,8 +45,9 @@ For using this components you need api endpoint that response should exactly loo
   ]
 }
 ```
-
+In endpoint you can pass ```GET``` params with parameters props. But this params is optional and can be passed null as default. Every thing is handled inside components.
 > ### Props to Define
+
 ```html
 <datatable
   :endpoint="tableData.endpoint"
@@ -42,6 +58,7 @@ For using this components you need api endpoint that response should exactly loo
   :refresh="tableData.refresh"
 ></datatable>
 ```
+
 > Props
 > | props | Description | |
 > |------------|-----------------------------------------------------------------------------------------------------------------------------------------------|---|
@@ -56,7 +73,8 @@ For using this components you need api endpoint that response should exactly loo
 
 ```js
 tableData: {
-      params: null, //always define this as null
+      params: null, 
+      //can be define this as null(recommended)
       refresh: true, //always define as either true or false
       endpoint: "http://localhost:3000/api/enquiry",
       columns: [
