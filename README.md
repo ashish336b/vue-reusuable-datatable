@@ -5,7 +5,7 @@ You can use this component by simply copy `datatable.vue` and add inside to your
 You should use specific `GET` params in endpoint.
 
 ```
-http://localhost:3000/api/endpoint?limit=10&page=1&sortBy=name&order=asc&searchText=ashi
+http://localhost:3000/api/enquiry?limit=10&page=1&sortBy=name&order=asc&searchText=ashi
 ```
 
 | params     | Description                  |     |
@@ -118,7 +118,7 @@ tableData: {
           /* For button content. */
         },
         {
-          event: "deleteEvent", //<datatable @deleteEvent="methodToTrigger()">
+          event: "deleteEvent", //<datatable @deleteEvent="methodToTrigger()"/>
           /* This event is implemented below methodToTrigger
           is named as deleteEvent */
           class: "is-white has-text-danger px-2 py-0 mx-0 my-0",
@@ -176,7 +176,8 @@ export default {
     tableData: {
       params: null,
       refresh: true,
-      endpoint: "http://localhost:3000/api/enquiry",
+      endpoint: "http://localhost:3000/api/endpoint",
+      //no get params needed to pass here
       columns: [
         {
           field: "name",
