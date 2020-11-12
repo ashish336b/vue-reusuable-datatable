@@ -2,12 +2,14 @@
   <datatable
     :endpoint="tableData.endpoint"
     :columns="tableData.columns"
-    :actions="tableData.actions"
-    @editEvent="edit($event)"
-    @deleteEvent="del($event)"
     :parameters="tableData.params"
     :refresh="tableData.refresh"
-  ></datatable>
+  >
+    <template slot-scope="item">
+      <a class="button is-primary is-small" @click="edit(item)">Edit</a>
+      <a class="button is-danger is-small" @click="del(item)">Delete</a>
+    </template>
+  </datatable>
 </template>
 
 <script>
@@ -52,26 +54,16 @@ export default {
           },
         },
       ],
-      actions: [
-        {
-          event: "editEvent",
-          class: "is-white has-text-primary px-2 py-0 mx-0 my-0",
-          value: `<span class="iconify" data-icon="ant-design:edit-filled" data-inline="false"></span>`,
-        },
-        {
-          event: "deleteEvent",
-          class: "is-white has-text-danger px-2 py-0 mx-0 my-0",
-          value: `<span class="iconify" data-icon="ant-design:delete-filled" data-inline="false"></span>`,
-        },
-      ],
     },
   }),
   methods: {
     edit: function (event) {
-      alert(`edit event on id=> ${event.id}`);
+      alert(`edit action here`);
+      this.tableData.refresh = !this.tableData.refresh;
     },
     del: function (event) {
-      alert(`delete request on id=> ${event.id}`);
+      alert(`delete action here`);
+      this.tableData.refresh = !this.tableData.refresh;
     },
   },
 };

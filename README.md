@@ -8,14 +8,13 @@ You should use specific `GET` params in endpoint.
 http://localhost:3000/api/enquiry?limit=10&page=1&sortBy=name&order=asc&searchText=ashi
 ```
 
-| params     | Description                  |     
+| params     | Description                  |
 | ---------- | ---------------------------- |
-| limit      | no of data to show in a page |     
-| page       | Current page Number          |     
-| sortBy     | database field name to sort  |     
-| order      | asc or desc                  |     
-| searchText | any search Text              |     
-
+| limit      | no of data to show in a page |
+| page       | Current page Number          |
+| sortBy     | database field name to sort  |
+| order      | asc or desc                  |
+| searchText | any search Text              |
 
 For using this components you need api endpoint like mentioned above and response should exactly look like this.
 
@@ -45,18 +44,24 @@ For using this components you need api endpoint like mentioned above and respons
   ]
 }
 ```
-In endpoint you can pass ```GET``` params with parameters props. But this params is optional and can be passed null as default. Every thing is handled inside components.
+
+In endpoint you can pass `GET` params with parameters props. But this params is optional and can be passed null as default. Every thing is handled inside components.
+
 > ### Props to Define
 
 ```html
 <datatable
   :endpoint="tableData.endpoint"
   :columns="tableData.columns"
-  :actions="tableData.actions"
   @deleteEvent="deleteEvent($event)"
   :parameters="tableData.params"
   :refresh="tableData.refresh"
-></datatable>
+>
+  <template slot-scope="item">
+    <a class="button is-primary is-small" @click="edit(item)">Edit</a>
+    <a class="button is-danger is-small" @click="del(item)">Delete</a>
+  </template>
+</datatable>
 ```
 
 > Props
@@ -64,27 +69,25 @@ In endpoint you can pass ```GET``` params with parameters props. But this params
 > |------------|-----------------------------------------------------------------------------------------------------------------------------------------------|---|
 > | endpoint | This is endpoint for you api. Response Should look like above mentioned | |
 > | columns | columns to show in table. It should be passed as array of object. object contains field , column as compulsory key and render as optional key | |
-> | actions | This is also array of object. This is used for displaying delete and edit buttons | |
 > | parameters | This is parameters to pass and this is done automatically in emit event. You just have to pass it in props as null | |
 > | refresh | This is true and false toggle props to refresh datatable for reactivity | |
-> | eventName | Same name that is passed action[index].event. This has method this is defined in methods in vue instance which is for certain click event like delete on click | |
 
 ### the above defined props is defined in data
 
 ```js
 tableData: {
-      params: null, 
+      params: null,
       //can be define this as null(recommended)
       refresh: true, //always define as either true or false
-      endpoint: "http://localhost:3000/api/enquiry",
+      endpoint: "http://localhost:3000/your-endpoint",
       columns: [
         {
           field: "name",
           /* field from api response. this should be same as in
           api response*/
           column: "name", //String to Display in datatable columns
-          render: function(field) { 
-            //for rendering as per condition in datatable. 
+          render: function(field) {
+            //for rendering as per condition in datatable.
             //Just like jquery render. This is optional
             return !field ? "ok" : field;
           }
@@ -104,31 +107,6 @@ tableData: {
           }
         }
       ],
-      actions: [
-         /* This is for displaying buttons eg. delete/edit in datatable */
-        {
-          event: "editEvent",
-          //  <datatable @editEvent="methodToTriggerWhenClicked($event)">
-          /* name of event to emit when this button is clicked.
-          This emitted $event contains _id and params(this is passed in
-          parameters props when action button is clicked)  */
-          /* After That you can call @editEvent="methodName($event)"
-          for your click action in buttons. See below for deleteEvent code
-          */
-          class: "is-white has-text-primary px-2 py-0 mx-0 my-0",
-          /* css class for button styling */
-          value: `<span class="iconify" data-icon="ant-design:edit-filled" data-inline="false"></span>`
-          /* For button content. */
-        },
-        {
-          event: "deleteEvent", //<datatable @deleteEvent="methodToTrigger()"/>
-          /* This event is implemented below methodToTrigger
-          is named as deleteEvent */
-          class: "is-white has-text-danger px-2 py-0 mx-0 my-0",
-          value: `<span class="iconify" data-icon="ant-design:delete-filled" data-inline="false"></span>`
-        }
-      ]
-    }
   }
 ```
 
@@ -136,15 +114,9 @@ tableData: {
 
 ```js
   methods: {
-    deleteEvent: function(event) {
-      axios
-        .post("http://localhost:3000/api/enquiry/delete", { id: event.id })
-        .then(res => {
-          this.tableData.params = event.params;  //this params is from emitted event. Pass this to props named parameters
-
-          this.tableData.refresh = !this.tableData.refresh; //just change value every time request is sent to refresh datatable
-          // This refresh is passed as props name refresh.
-        });
+    edit: function(event) {
+      // console to see what event object contains.
+      alert("edit event");
     }
   }
 ```
@@ -154,23 +126,23 @@ tableData: {
 ```html
 <template>
   <div>
-    <sidebar>
-      <datatable
-        :endpoint="tableData.endpoint"
-        :columns="tableData.columns"
-        :actions="tableData.actions"
-        @deleteEvent="deleteEvent($event)"
-        :parameters="tableData.params"
-        :refresh="tableData.refresh"
-      ></datatable>
-    </sidebar>
+    <datatable
+      :endpoint="tableData.endpoint"
+      :columns="tableData.columns"
+      :parameters="tableData.params"
+      :refresh="tableData.refresh"
+    >
+      <template slot-scope="item">
+        <a class="button is-primary is-small" @click="edit(item)">Edit</a>
+        <a class="button is-danger is-small" @click="del(item)">Delete</a>
+      </template>
+    </datatable>
   </div>
 </template>
 ```
 
 ```js
-import datatable from "../../components/datatable";
-import axios from "axios";
+import datatable from "../components/datatable";
 export default {
   components: {
     datatable,
@@ -179,7 +151,7 @@ export default {
     tableData: {
       params: null,
       refresh: true,
-      endpoint: "http://localhost:3000/api/endpoint",
+      endpoint: "https://app.medmandu.life/api/your-endpoint",
       //no get params needed to pass here
       columns: [
         {
@@ -190,45 +162,37 @@ export default {
           },
         },
         {
-          field: "address",
-          column: "address",
+          field: "group_name",
+          column: "Group Name",
           render: function (field) {
             return !field ? "..." : field;
           },
         },
         {
-          field: "email",
-          column: "Email",
+          field: "composition",
+          column: "Composition",
           render: function (field) {
-            return !field ? "<p class='has-text-primary'>No Email</p>" : field;
+            return !field ? "..." : field;
           },
         },
-      ],
-      actions: [
         {
-          event: "editEvent",
-          class: "is-white has-text-primary px-2 py-0 mx-0 my-0",
-          value: `<span class="iconify" data-icon="ant-design:edit-filled" data-inline="false"></span>`,
-        },
-        {
-          event: "deleteEvent",
-          class: "is-white has-text-danger px-2 py-0 mx-0 my-0",
-          value: `<span class="iconify" data-icon="ant-design:delete-filled" data-inline="false"></span>`,
+          field: "type",
+          column: "type",
+          render: function (field) {
+            return !field ? "<p class='has-text-primary'>..</p>" : field;
+          },
         },
       ],
     },
   }),
   methods: {
-    deleteEvent: function (event) {
-      axios
-        .post("http://localhost:3000/api/enquiry/edit", { id: event.id })
-        .then((res) => {
-          this.tableData.show = true;
-          // this.tableData.endpoint = "http://localhost:3000/api/enquiry";
-          /* include these below two line of code everytime for reactivity */
-          this.tableData.params = event.params;
-          this.tableData.refresh = !this.tableData.refresh; //just change value every time request is sent to refresh datatable
-        });
+    edit: function (event) {
+      alert(`edit action here`);
+      this.tableData.refresh = !this.tableData.refresh;
+    },
+    del: function (event) {
+      alert(`delete action here`);
+      this.tableData.refresh = !this.tableData.refresh;
     },
   },
 };

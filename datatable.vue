@@ -3,8 +3,8 @@
     <div class="card table-container">
       <div class="px-3 py-3">
         <div class="card-header pb-2">
-          <div class="search-and-select">
-            <div class="has-select">
+          <div class="search-and-select columns">
+            <div class="has-select column is-8">
               <span class="pr-1">Show</span>
               <div class="select is-small">
                 <select @change="onChange($event)">
@@ -15,52 +15,80 @@
               </div>
               <span class="pl-1">Entry</span>
             </div>
-            <div class="has-search is-flex">
-              <label for class="pr-3">Search</label>
-              <input
-                class="input is-small"
-                type="text"
-                v-model="tableData.params.searchedText"
-                @keyup="searchData()"
-                placeholder="Search"
-              />
+            <div class="has-search column is-4">
+              <div class="control has-icons-left">
+                <input
+                  class="input is-small"
+                  type="text"
+                  v-model="tableData.params.searchedText"
+                  @keyup="searchData()"
+                  placeholder="Search"
+                />
+                <span class="icon is-small is-left">
+                  <span
+                    class="iconify"
+                    data-icon="ant-design:search-outlined"
+                    data-inline="false"
+                  ></span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
-        <table class="table is-narrow custom-table">
-          <thead class="has-background-dark">
+        <table class="table is-fullwidth">
+          <thead>
             <tr>
-              <th class v-for="i in columns" :key="i.column" @click="sortBy(i.field)">
-                <span>{{i.column}}</span>
+              <th v-for="i in columns" :key="i.column" @click="sortBy(i.field)">
+                <span>{{ i.column }}</span>
               </th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in tableData.data.data" :key="item._id">
-              <td v-for="i in columns" :key="i.column" v-html="renderData(i,item)"></td>
+            <tr v-if="!tableData.data.totalData">
+              <td :colspan="columns.length + 1" class="has-text-centered">
+                No data available in table
+              </td>
+            </tr>
+            <tr v-else v-for="item in tableData.data.data" :key="item._id">
+              <td
+                class="has-text-weight-medium"
+                v-for="i in columns"
+                :key="i.column"
+                v-html="renderData(i, item)"
+              ></td>
 
               <td class="actions">
                 <a
                   v-for="el in actions"
                   :key="el.event"
                   :class="el.class"
-                  @click="editEvent(el.event , {id : item._id , params : tableData.params})"
+                  @click="
+                    editEvent(el.event, {
+                      id: item._id,
+                      params: tableData.params,
+                    })
+                  "
                 >
                   <span v-html="el.value"></span>
                   <!-- <span class="iconify" data-icon="ant-design:edit-filled" data-inline="false"></span> -->
                 </a>
+                <slot v-bind="{ item, params: tableData.params }"></slot>
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <td colspan="1">
-                <span>Showing {{startPoint}} to {{startPoint + tableData.data.currentPageData -1}} of {{tableData.data.totalData}}</span>
+                <span
+                  >Showing {{ startPoint }} to
+                  {{ startPoint + tableData.data.currentPageData - 1 }} of
+                  {{ tableData.data.totalData }}</span
+                >
               </td>
               <td colspan="4">
                 <div
-                  class="pagination is-rounded is-small"
+                  class="pagination is-small"
                   role="navigation"
                   aria-label="pagination"
                 >
@@ -68,14 +96,22 @@
                     <li @click="anotherPage(1)">
                       <a
                         class="pagination-link"
-                        :class="{'pagination-ellipsis': tableData.data.currentPage == 1}"
-                      >First</a>
+                        :class="{
+                          'pagination-ellipsis':
+                            tableData.data.currentPage == 1,
+                        }"
+                        >First</a
+                      >
                     </li>
                     <li @click="anotherPage(tableData.data.prevPage)">
                       <a
                         class="pagination-link"
-                        :class="{'pagination-ellipsis': tableData.data.currentPage == 1}"
-                      >Prev</a>
+                        :class="{
+                          'pagination-ellipsis':
+                            tableData.data.currentPage == 1,
+                        }"
+                        >Prev</a
+                      >
                     </li>
                     <li
                       @click="anotherPage(n)"
@@ -86,23 +122,36 @@
                         class="pagination-link"
                         :class="{ 'is-current': tableData.params.page === n }"
                         aria-label="Goto page 1"
-                      >{{ n }}</a>
+                        >{{ n }}</a
+                      >
                     </li>
                     <li @click="anotherPage(tableData.data.nextPage)">
                       <a
                         class="pagination-next"
-                        :class="{'pagination-ellipsis': tableData.data.currentPage == tableData.data.totalNumberOfPage}"
-                      >next</a>
+                        :class="{
+                          'pagination-ellipsis':
+                            tableData.data.currentPage ==
+                            tableData.data.totalNumberOfPage,
+                        }"
+                        >next</a
+                      >
                     </li>
                     <li @click="anotherPage(tableData.data.totalNumberOfPage)">
                       <a
                         class="pagination-next"
-                        :class="{'pagination-ellipsis': tableData.data.currentPage == tableData.data.totalNumberOfPage}"
-                      >Last</a>
+                        :class="{
+                          'pagination-ellipsis':
+                            tableData.data.currentPage ==
+                            tableData.data.totalNumberOfPage,
+                        }"
+                        >Last</a
+                      >
                     </li>
                   </ul>
                 </div>
               </td>
+              <td v-if="!columns.length >= 5"></td>
+              <td v-else v-for="i in columns.length - 4" :key="i"></td>
             </tr>
           </tfoot>
         </table>
@@ -112,7 +161,6 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
   props: ["columns", "endpoint", "actions", "parameters", "refresh"],
   data: () => ({
@@ -121,7 +169,7 @@ export default {
       params: {
         page: 1,
         limit: 10,
-        sortBy: "name",
+        sortBy: "createdAt",
         order: "desc",
         searchedText: "",
         totalPage: "",
@@ -148,15 +196,17 @@ export default {
     },
     anotherPage: function (id) {
       if (!id) return;
-      (this.tableData.params.loading = true), (this.tableData.params.page = id);
+      this.tableData.params.loading = true;
+      this.tableData.params.page = id;
       this.fetchPage();
     },
     range: function (start, stop, step) {
+      //like python range function
       var a = [start],
         b = start;
       while (b < stop) {
         a.push((b += step || 1));
-      }
+      } //status
       return b > stop ? a.slice(0, -1) : a;
     },
     showPageNumber: function (currentPage, totalPage) {
@@ -190,12 +240,15 @@ export default {
     },
     fetchPage: async function () {
       if (this.parameters) {
-        this.tableData.params = this.parameters;
+        this.tableData.params = {
+          ...this.tableData.params,
+          ...this.parameters,
+        };
       }
       this.tableData.url =
         this.endpoint +
         `?limit=${this.tableData.params.limit}&page=${this.tableData.params.page}&sortBy=${this.tableData.params.sortBy}&order=${this.tableData.params.order}&searchText=${this.tableData.params.searchedText}`;
-      var res = await axios.get(this.tableData.url);
+      var res = await this.$axios.get(this.tableData.url);
       this.showPageNumber(
         this.tableData.params.page,
         res.data.totalNumberOfPage
@@ -236,22 +289,13 @@ export default {
 <style lang="scss">
 .search-and-select {
   width: 100%;
-  display: flex;
-  .has-select {
-    width: 100%;
-  }
 }
 .custom-table {
-  width: 100%;
   thead {
-    .sort {
-      background-color: rgb(54, 38, 38);
-    }
     tr {
       cursor: pointer;
-      width: 100%;
       th {
-        color: white;
+        padding: 12px !important;
         svg {
           text-align: left;
           cursor: pointer;
@@ -272,5 +316,8 @@ export default {
       justify-content: flex-end;
     }
   }
+}
+.pagination ul li > a {
+  margin: 0.25rem 1px !important;
 }
 </style>
