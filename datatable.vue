@@ -150,8 +150,6 @@
                   </ul>
                 </div>
               </td>
-              <td v-if="!columns.length >= 5"></td>
-              <td v-else v-for="i in columns.length - 4" :key="i"></td>
             </tr>
           </tfoot>
         </table>

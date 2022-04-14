@@ -53,7 +53,6 @@ In endpoint you can pass `GET` params with parameters props. But this params is 
 <datatable
   :endpoint="tableData.endpoint"
   :columns="tableData.columns"
-  @deleteEvent="deleteEvent($event)"
   :parameters="tableData.params"
   :refresh="tableData.refresh"
 >
